@@ -51,7 +51,7 @@ class SearchImage extends ContentComponent {
         this.displayError('Please enter a search term');
         return;
       }
-      this.getImages(searchTerm)
+      this.getImages(searchTerm.toLowerCase())
         .then((imageList) => {
           if (imageList) {
             this.displayImage(imageList);
