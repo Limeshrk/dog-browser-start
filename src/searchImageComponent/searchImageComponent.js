@@ -29,7 +29,6 @@ class SearchImage extends ContentComponent {
   displayImage(imageList) {
     const image = document.createElement('img');
     image.src = imageList[Math.floor(Math.random() * imageList.length)];
-    this.clearContent();
     this.clearErrors();
     document.querySelector('#content').appendChild(image);
   }
@@ -39,6 +38,7 @@ class SearchImage extends ContentComponent {
     <form class="dog-search">
       <span class="search-icon"></span>
       <input type="text" id="dogSearchInput">
+      <input type="text" id="imageNumberInput" placeholder="1">
       <button type="submit">Search</button>
     </form>
     `;
@@ -47,11 +47,47 @@ class SearchImage extends ContentComponent {
       // megakadályozzuk a form küldését
       event.preventDefault();
       const searchTerm = document.querySelector('#dogSearchInput').value;
+      const count = Number(document.querySelector('#imageNumberInput').value);
+
       if (!searchTerm) {
         this.displayError('Please enter a search term');
         return;
       }
-      this.getImages(searchTerm.toLowerCase())
+
+      this.clearContent();
+      //checks if count isNaN or can be looped
+      if (isNaN(count) == false && Math.floor(count) > 0) {
+        console.log('Int vagy kerekitett érték ', Math.floor(count));
+        for (let i = 0; i < Math.floor(count); i++) {
+          this.getImages(searchTerm.toLowerCase())
+            .then((imageList) => {
+              if (imageList) {
+                this.displayImage(imageList);
+              } else {
+                this.displayError('Breed not found. Please try to list the breeds first.');
+              }
+            })
+            .catch((error) => {
+              this.displayError('Something went wrong. Please try again later.');
+              console.error(error);
+            });
+        }
+      } else {
+        console.log('Fallback 1x futásra (pl. NaN/negativ érték) ', typeof count, count);
+        this.getImages(searchTerm.toLowerCase())
+          .then((imageList) => {
+            if (imageList) {
+              this.displayImage(imageList);
+            } else {
+              this.displayError('Breed not found. Please try to list the breeds first.');
+            }
+          })
+          .catch((error) => {
+            this.displayError('Something went wrong. Please try again later.');
+            console.error(error);
+          });
+      }
+      /*  this.getImages(searchTerm.toLowerCase())
         .then((imageList) => {
           if (imageList) {
             this.displayImage(imageList);
@@ -62,7 +98,7 @@ class SearchImage extends ContentComponent {
         .catch((error) => {
           this.displayError('Something went wrong. Please try again later.');
           console.error(error);
-        });
+        }); */
     });
   }
 }
