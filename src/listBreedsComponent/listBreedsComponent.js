@@ -8,12 +8,22 @@ class ListBreeds extends ContentComponent {
   }
 
   async getFullList() {
-    const response = await fetch('https://dog.ceo/api/breeds/list/all');
-    if (!response.ok) {
-      throw new Error('API response error');
+    //check if localStorage is empty then run fetch and store in localStorage
+    if (localStorage.getItem('dogs') === null) {
+      console.log('data from fetch');
+      const response = await fetch('https://dog.ceo/api/breeds/list/all');
+      if (!response.ok) {
+        throw new Error('API response error');
+      } else {
+        const data = await response.json();
+        localStorage.setItem('dogs', JSON.stringify(data));
+        return data.message;
+      }
+    } else {
+      console.log('data from localStorage');
+      const data = JSON.parse(localStorage.getItem('dogs'));
+      return data.message;
     }
-    const data = await response.json();
-    return data.message;
   }
 
   /**

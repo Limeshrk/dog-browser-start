@@ -34,7 +34,7 @@ class SearchImage extends ContentComponent {
   }
 
   render() {
-    const markup = `
+    const markup = /* html */ `
     <form class="dog-search">
       <span class="search-icon"></span>
       <input type="text" id="dogSearchInput">
@@ -57,7 +57,7 @@ class SearchImage extends ContentComponent {
       this.clearContent();
       //checks if count isNaN or can be looped
       if (isNaN(count) == false && Math.floor(count) > 0) {
-        console.log('Int vagy kerekitett érték ', Math.floor(count));
+        console.log('Int vagy (le)kerekitett érték ', Math.floor(count));
         for (let i = 0; i < Math.floor(count); i++) {
           this.getImages(searchTerm.toLowerCase())
             .then((imageList) => {
