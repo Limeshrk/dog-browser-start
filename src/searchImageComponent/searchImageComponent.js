@@ -54,34 +54,27 @@ class SearchImage extends ContentComponent {
     document.querySelector('.dog-search button').addEventListener('click', (event) => {
       // megakadályozzuk a form küldését
       event.preventDefault();
-      const searchTerm = document.querySelector('#dogSearchInput').value;
-      const count = Number(document.querySelector('#imageNumberInput').value);
+      this.handleSearch();
+    });
+    document.addEventListener('onSearch', (e) => {
+      (document.querySelector('#dogSearchInput').value = e.detail), this.handleSearch();
+    });
+  }
 
-      if (!searchTerm) {
-        this.displayError('Please enter a search term');
-        return;
-      }
+  handleSearch() {
+    const searchTerm = document.querySelector('#dogSearchInput').value;
+    const count = Number(document.querySelector('#imageNumberInput').value);
 
-      this.clearContent();
-      //checks if count not isNaN & is valid value
-      if (isNaN(count) == false && Math.floor(count) > 0) {
-        console.log('Int vagy (le)kerekitett érték ', Math.floor(count));
-        for (let i = 0; i < Math.floor(count); i++) {
-          this.getImages(searchTerm.toLowerCase())
-            .then((imageList) => {
-              if (imageList) {
-                this.displayImage(imageList);
-              } else {
-                this.displayError('Breed not found. Please try to list the breeds first.');
-              }
-            })
-            .catch((error) => {
-              this.displayError('Something went wrong. Please try again later.');
-              console.error(error);
-            });
-        }
-      } else {
-        console.log('Fallback 1x futásra (pl. NaN/negativ érték) ', typeof count, count);
+    if (!searchTerm) {
+      this.displayError('Please enter a search term');
+      return;
+    }
+
+    this.clearContent();
+    //checks if count not isNaN & is valid value
+    if (isNaN(count) == false && Math.floor(count) > 0) {
+      console.log('Int vagy (le)kerekitett érték ', Math.floor(count));
+      for (let i = 0; i < Math.floor(count); i++) {
         this.getImages(searchTerm.toLowerCase())
           .then((imageList) => {
             if (imageList) {
@@ -95,7 +88,21 @@ class SearchImage extends ContentComponent {
             console.error(error);
           });
       }
-    });
+    } else {
+      console.log('Fallback 1x futásra (pl. NaN/negativ érték, nincs érték) ', typeof count, count);
+      this.getImages(searchTerm.toLowerCase())
+        .then((imageList) => {
+          if (imageList) {
+            this.displayImage(imageList);
+          } else {
+            this.displayError('Breed not found. Please try to list the breeds first.');
+          }
+        })
+        .catch((error) => {
+          this.displayError('Something went wrong. Please try again later.');
+          console.error(error);
+        });
+    }
   }
 }
 

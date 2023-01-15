@@ -29,14 +29,18 @@ class ListBreeds extends ContentComponent {
   /**
    * displays a single breed
    * @param {string} breedName - name of the breed
+   *
    */
+
   createListItem(breedName) {
     const item = document.createElement('div');
     item.classList.add('breed-list-item');
     item.textContent = breedName;
+    item.addEventListener('click', (e) => {
+      document.dispatchEvent(new CustomEvent('onSearch', { detail: breedName }));
+    });
     document.querySelector('#content').appendChild(item);
   }
-
   /**
    * displays the list of breeds
    * @param {object} breedList - object containing the list of breeds
