@@ -42,3 +42,20 @@ input {
   max-width: 100%;
   margin: 1rem;
 }
+
+/* Styles for fade-in */
+#content img.lazy {
+  opacity: 0.3;
+}
+#content img:not(.initial) {
+  transition: opacity 2s;
+}
+#content img.initial,
+#content img.loaded,
+#content img.error {
+  opacity: 1;
+}
+
+#content img:not([src]) {
+  visibility: hidden;
+}

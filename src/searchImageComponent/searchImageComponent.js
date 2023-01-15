@@ -1,5 +1,7 @@
 import '../css/searchImageComponent.css';
 import ContentComponent from '../contentComponent/contentComponent.js';
+import LazyLoad from 'vanilla-lazyload';
+import preloading from '../img/preloading.gif';
 
 class SearchImage extends ContentComponent {
   constructor() {
@@ -28,9 +30,15 @@ class SearchImage extends ContentComponent {
 
   displayImage(imageList) {
     const image = document.createElement('img');
-    image.src = imageList[Math.floor(Math.random() * imageList.length)];
+    image.classList.add('lazy');
+    image.src = '../img/preloading.gif';
+    image.dataset.src = imageList[Math.floor(Math.random() * imageList.length)];
+    var LazyLoadInstace = new LazyLoad({
+      data_src: 'src'
+    });
     this.clearErrors();
     document.querySelector('#content').appendChild(image);
+    LazyLoadInstace.update();
   }
 
   render() {
@@ -55,7 +63,7 @@ class SearchImage extends ContentComponent {
       }
 
       this.clearContent();
-      //checks if count isNaN or can be looped
+      //checks if count not isNaN & is valid value
       if (isNaN(count) == false && Math.floor(count) > 0) {
         console.log('Int vagy (le)kerekitett érték ', Math.floor(count));
         for (let i = 0; i < Math.floor(count); i++) {
@@ -87,18 +95,6 @@ class SearchImage extends ContentComponent {
             console.error(error);
           });
       }
-      /*  this.getImages(searchTerm.toLowerCase())
-        .then((imageList) => {
-          if (imageList) {
-            this.displayImage(imageList);
-          } else {
-            this.displayError('Breed not found. Please try to list the breeds first.');
-          }
-        })
-        .catch((error) => {
-          this.displayError('Something went wrong. Please try again later.');
-          console.error(error);
-        }); */
     });
   }
 }
